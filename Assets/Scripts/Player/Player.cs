@@ -9,8 +9,11 @@ public class Player : MonoBehaviour
 
     [Header("Atributes")]
     public float speed;
+    public float speedRun;
     public float forceJump;
     public float friction;
+
+    private float _currentSpeed;
 
     private void Update() {
         HandleJumping();
@@ -18,10 +21,16 @@ public class Player : MonoBehaviour
     }
 
     private void HandleMovement() {
+        if (Input.GetKey(KeyCode.LeftShift)) {
+            _currentSpeed = speedRun;
+        } else {
+            _currentSpeed = speed;
+        }
+
         if (Input.GetKey(KeyCode.LeftArrow)) {
-            rig2D.velocity = new Vector2(-speed, rig2D.velocity.y);
+            rig2D.velocity = new Vector2(-_currentSpeed, rig2D.velocity.y);
         } else if (Input.GetKey(KeyCode.RightArrow)) {
-            rig2D.velocity = new Vector2(speed, rig2D.velocity.y);
+            rig2D.velocity = new Vector2(_currentSpeed, rig2D.velocity.y);
         }
 
         if (rig2D.velocity.x > 0) {
