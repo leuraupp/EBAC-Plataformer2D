@@ -6,6 +6,7 @@ public class EnemyBase : MonoBehaviour
 {
     [Header("Enemy Atribute")]
     public int damage = 0;
+    public HealthBase health;
 
     [Header("Enemy Animator")]
     public Animator animator;
@@ -22,5 +23,9 @@ public class EnemyBase : MonoBehaviour
 
     private void PlayAttackAnimation() {
         animator.SetTrigger(triggerAttack);
+    }
+
+    public void Damege(int amount) {
+        health.Damage(amount);
     }
 }
