@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
 {
     [Header("References")]
     public Rigidbody2D rig2D;
+    public HealthBase health;
 
     [Header("Speed Atributes")]
     public float speed;
@@ -25,11 +26,18 @@ public class Player : MonoBehaviour
     [Header("Animation Player")]
     public string boolRun = "Run";
     public string boolJump = "Jump";
+    public string triggerDeath = "Death";
     public float playerSwipeDuration = .1f;
     public Animator animator;
 
     private float _currentSpeed;
     private bool _groundedAnimating = false;
+
+    private void Awake() {
+        if (health != null) {
+            health.OnKill += PlayerKill;
+        }
+    }
 
     private void Update() {
         HandleJumping();
@@ -92,5 +100,14 @@ public class Player : MonoBehaviour
         //rig2D.transform.DOScaleY(groundedScaleY, animationDuration).SetLoops(2, LoopType.Yoyo).SetEase(ease);
         //rig2D.transform.DOScaleX(groundedScaleX, animationDuration).SetLoops(2, LoopType.Yoyo).SetEase(ease);
         animator.SetBool(boolJump, false);
+    }
+
+    public void PlayerKill() {
+        health.OnKill -= PlayerKill;
+        animator.SetTrigger(triggerDeath);
+    }
+
+    public void DestroyMe() {
+        Destroy(gameObject);
     }
 }
