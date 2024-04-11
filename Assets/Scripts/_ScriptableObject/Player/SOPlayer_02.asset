@@ -26,4 +26,4 @@ MonoBehaviour:
   boolJump: Jump
   triggerDeath: Death
   playerSwipeDuration: 0.1
-  player: {fileID: 6413013834153556191, guid: 00afc9fb4087652419d090da0b825d97, type: 3}
+  player: {fileID: 6413013834153556191, guid: 72164bf6de609bf4da4c2b4e219d6129, type: 3}

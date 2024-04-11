@@ -7,9 +7,16 @@ using Ebac.Core.Singleton;
 public class ItemManager : Singleton<ItemManager>
 {
     public SOInt coins;
+    public SOInt apple;
 
     private void Reset() {
         coins.value = 0;
+        apple.value = 0;
+        UpdateUi();
+    }
+
+    public void AddApple(int amount = 1) {
+        apple.value += amount;
         UpdateUi();
     }
 

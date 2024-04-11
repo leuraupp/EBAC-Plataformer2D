@@ -15,7 +15,7 @@ MonoBehaviour:
   speed: 20
   speedRun: 40
   forceJump: 10
-  friction: {x: 0.1, y: 0}
+  friction: {x: 0.3, y: 0}
   jumpScaleY: 1.1
   jumpScaleX: 0.7
   groundedScaleY: 0.8
