@@ -6,15 +6,19 @@ using Ebac.Core.Singleton;
 
 public class ItemManager : Singleton<ItemManager>
 {
-    public int coins;
-    public TMP_Text coinsText;
+    public SOInt coins;
 
     private void Reset() {
-        coins = 0;
+        coins.value = 0;
+        UpdateUi();
     }
 
     public void AddCoins(int amount = 1) {
-        coins += amount;
-        coinsText.text = "X "+coins;
+        coins.value += amount;
+        UpdateUi();
+    }
+
+    private void UpdateUi() {
+        //UIInGameManager.UpdateUICoins("X " + coins.value.ToString());
     }
 }

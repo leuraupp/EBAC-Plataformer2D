@@ -9,34 +9,18 @@ public class Player : MonoBehaviour
     public Rigidbody2D rig2D;
     public HealthBase health;
 
-    [Header("Speed Atributes")]
-    public float speed;
-    public float speedRun;
-    public float forceJump;
-    public float friction;
-
-    [Header("Animation Atributes")]
-    public float jumpScaleY = 1.1f;
-    public float jumpScaleX = 0.7f;
-    public float groundedScaleY = 0.8f;
-    public float groundedScaleX = 1.2f;
-    public float animationDuration = 0.3f;
-    public Ease ease = Ease.OutBack;
-
-    [Header("Animation Player")]
-    public string boolRun = "Run";
-    public string boolJump = "Jump";
-    public string triggerDeath = "Death";
-    public float playerSwipeDuration = .1f;
-    public Animator animator;
+    public SOPlayer soPlayer;
 
     private float _currentSpeed;
     private bool _groundedAnimating = false;
+    private Animator _currentPlayer;
 
     private void Awake() {
         if (health != null) {
             health.OnKill += PlayerKill;
         }
+
+        _currentPlayer = Instantiate(soPlayer.player, transform);
     }
 
     private void Update() {
@@ -46,35 +30,35 @@ public class Player : MonoBehaviour
 
     private void HandleMovement() {
         if (Input.GetKey(KeyCode.LeftShift)) {
-            _currentSpeed = speedRun;
-            animator.speed = 2;
+            _currentSpeed = soPlayer.speedRun;
+            _currentPlayer.speed = 2;
         } else {
-            _currentSpeed = speed;
-            animator.speed = 1;
+            _currentSpeed = soPlayer.speed;
+            _currentPlayer.speed = 1;
         }
 
         if (Input.GetKey(KeyCode.LeftArrow)) {
             rig2D.velocity = new Vector2(-_currentSpeed, rig2D.velocity.y);
-            rig2D.transform.DOScaleX(-1, playerSwipeDuration);
-            animator.SetBool(boolRun, true);
+            rig2D.transform.DOScaleX(-1, soPlayer.playerSwipeDuration);
+            _currentPlayer.SetBool(soPlayer.boolRun, true);
         } else if (Input.GetKey(KeyCode.RightArrow)) {
             rig2D.velocity = new Vector2(_currentSpeed, rig2D.velocity.y);
-            rig2D.transform.DOScaleX(1, playerSwipeDuration);
-            animator.SetBool(boolRun, true);
+            rig2D.transform.DOScaleX(1, soPlayer.playerSwipeDuration);
+            _currentPlayer.SetBool(soPlayer.boolRun, true);
         } else {
-            animator.SetBool(boolRun, false);
+            _currentPlayer.SetBool(soPlayer.boolRun, false);
         }
 
         if (rig2D.velocity.x > 0) {
-            rig2D.velocity -= new Vector2(friction, 0);
+            rig2D.velocity -= soPlayer.friction;
         } else if (rig2D.velocity.x < 0) {
-            rig2D.velocity += new Vector2(friction, 0);
+            rig2D.velocity += soPlayer.friction;
         }
     }
 
     private void HandleJumping() {
         if (Input.GetKeyDown(KeyCode.Space)) {
-            rig2D.velocity = Vector2.up * forceJump;
+            rig2D.velocity = Vector2.up * soPlayer.forceJump;
             rig2D.transform.localScale = Vector2.one;
 
             //DOTween.Kill(rig2D.transform);
@@ -92,19 +76,19 @@ public class Player : MonoBehaviour
     private void HandleScaleJump() {
         //rig2D.transform.DOScaleY(jumpScaleY, animationDuration).SetLoops(2, LoopType.Yoyo).SetEase(ease);
         //rig2D.transform.DOScaleX(jumpScaleX, animationDuration).SetLoops(2, LoopType.Yoyo).SetEase(ease);
-        animator.SetBool(boolJump, true);
-        animator.SetBool(boolRun, false);
+        _currentPlayer.SetBool(soPlayer.boolJump, true);
+        _currentPlayer.SetBool(soPlayer.boolRun, false);
     }
 
     private void HandleScaleGrounded() {
         //rig2D.transform.DOScaleY(groundedScaleY, animationDuration).SetLoops(2, LoopType.Yoyo).SetEase(ease);
         //rig2D.transform.DOScaleX(groundedScaleX, animationDuration).SetLoops(2, LoopType.Yoyo).SetEase(ease);
-        animator.SetBool(boolJump, false);
+        _currentPlayer.SetBool(soPlayer.boolJump, false);
     }
 
     public void PlayerKill() {
         health.OnKill -= PlayerKill;
-        animator.SetTrigger(triggerDeath);
+        _currentPlayer.SetTrigger(soPlayer.triggerDeath);
     }
 
     public void DestroyMe() {
