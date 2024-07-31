@@ -15,15 +15,31 @@ public class Player : MonoBehaviour
     private bool _groundedAnimating = false;
     private Animator _currentPlayer;
 
+    [Header("Jump Collision Check")]
+    public Collider2D collider2D;
+    public float distToGround;
+    public float spaceToGround;
+    public ParticleSystem jumpVFX;
+
     private void Awake() {
         if (health != null) {
             health.OnKill += PlayerKill;
         }
 
         _currentPlayer = Instantiate(soPlayer.player, transform);
+
+        if (collider2D != null) {
+            distToGround = collider2D.bounds.extents.y;
+        }
+    }
+
+    private bool IsGrounded() {
+        Debug.DrawRay(transform.position, -Vector2.up, Color.magenta, distToGround + spaceToGround);
+        return Physics2D.Raycast(transform.position, -Vector2.up, distToGround + spaceToGround);
     }
 
     private void Update() {
+        IsGrounded();
         HandleJumping();
         HandleMovement();
     }
@@ -57,7 +73,7 @@ public class Player : MonoBehaviour
     }
 
     private void HandleJumping() {
-        if (Input.GetKeyDown(KeyCode.Space)) {
+        if (Input.GetKeyDown(KeyCode.Space) && IsGrounded()) {
             rig2D.velocity = Vector2.up * soPlayer.forceJump;
             rig2D.transform.localScale = Vector2.one;
 
@@ -65,6 +81,7 @@ public class Player : MonoBehaviour
 
             HandleScaleJump();
             _groundedAnimating = false;
+            PlayJumpVFX();
         }
         if (rig2D.velocity.y == 0 && !_groundedAnimating) {
             _groundedAnimating = true;
@@ -84,6 +101,12 @@ public class Player : MonoBehaviour
         //rig2D.transform.DOScaleY(groundedScaleY, animationDuration).SetLoops(2, LoopType.Yoyo).SetEase(ease);
         //rig2D.transform.DOScaleX(groundedScaleX, animationDuration).SetLoops(2, LoopType.Yoyo).SetEase(ease);
         _currentPlayer.SetBool(soPlayer.boolJump, false);
+    }
+
+    private void PlayJumpVFX() {
+        if (jumpVFX != null) {
+            jumpVFX.Play();
+        }
     }
 
     public void PlayerKill() {
