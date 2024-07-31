@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 612902172879048071}
   - component: {fileID: 7179751950450404069}
   m_Layer: 0
-  m_Name: PRF_Particles_Coin
+  m_Name: PFB_Particles_Apple
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4817,7 +4817,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 127be13b2f00911419cb0a1267ae327c, type: 2}
+  - {fileID: 2100000, guid: 95f1415223c9f2a48956efeb023af31b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
