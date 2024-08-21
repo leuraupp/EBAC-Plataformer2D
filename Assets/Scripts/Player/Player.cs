@@ -14,12 +14,17 @@ public class Player : MonoBehaviour
     private float _currentSpeed;
     private bool _groundedAnimating = false;
     private Animator _currentPlayer;
+    public AudioSource jumpSFX;
 
     [Header("Jump Collision Check")]
     public Collider2D collider2D;
     public float distToGround;
     public float spaceToGround;
     public ParticleSystem jumpVFX;
+
+    public GameObject gameEndedScreen;
+
+    private bool _isDead = false;
 
     private void Awake() {
         if (health != null) {
@@ -38,9 +43,11 @@ public class Player : MonoBehaviour
     }
 
     private void Update() {
-        IsGrounded();
-        HandleJumping();
-        HandleMovement();
+        if (!_isDead) {
+            IsGrounded();
+            HandleJumping();
+            HandleMovement();
+        }
     }
 
     private void HandleMovement() {
@@ -81,6 +88,7 @@ public class Player : MonoBehaviour
             HandleScaleJump();
             _groundedAnimating = false;
             PlayJumpVFX();
+            PlayerJumpSFX();
         }
         if (rig2D.velocity.y == 0 && !_groundedAnimating) {
             _groundedAnimating = true;
@@ -109,9 +117,15 @@ public class Player : MonoBehaviour
         //}
     }
 
+    private void PlayerJumpSFX() {
+        jumpSFX.Play();
+    }
+
     public void PlayerKill() {
         health.OnKill -= PlayerKill;
         _currentPlayer.SetTrigger(soPlayer.triggerDeath);
+        gameEndedScreen.SetActive(true);
+        _isDead = true;
     }
 
     public void DestroyMe() {
